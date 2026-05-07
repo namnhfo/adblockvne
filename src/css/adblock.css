@@ -1,0 +1,302 @@
+/* 
+  AdBlock Pilot UI Design System
+  VnExpress Overseas 2026
+*/
+
+:root {
+  --vne-brand: #B42652;
+  --vne-brand-hover: #9A1F45;
+  --vne-text-main: #1a1a1a;
+  --vne-text-secondary: #666;
+  --vne-bg-toast: rgba(255, 255, 255, 0.95);
+  --vne-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  --vne-radius: 8px;
+  --vne-font-title: 'Merriweather', serif;
+  --vne-font-body: 'Arial', sans-serif;
+}
+
+/* --- Level 1: Interactive Nudge (Toast) --- */
+.vne-ab-toast {
+  position: fixed;
+  bottom: 80px; /* Above back to top area */
+  right: 20px;
+  width: 320px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgba(180, 38, 82, 0.15);
+  z-index: 200005;
+  border: 1px solid rgba(180, 38, 82, 0.1);
+  animation: vne-pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+.vne-ab-toast .progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--vne-brand);
+  width: 100%;
+  animation: vne-toast-timer 20s linear forwards;
+}
+
+/* Pinned Heart Icon */
+.vne-ab-pinned-icon {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: var(--vne-brand);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(180, 38, 82, 0.4);
+  z-index: 200004;
+  animation: vne-heartbeat 2s infinite;
+}
+
+/* Tooltip implementation */
+.vne-ab-pinned-icon::after {
+  content: "Hướng dẫn tắt Adblock";
+  position: absolute;
+  right: 55px;
+  background: #1a1a1a;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  font-family: Arial, sans-serif;
+  pointer-events: none;
+}
+
+.vne-ab-pinned-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+  right: 60px;
+}
+
+
+@keyframes vne-pop-in {
+  0% { transform: scale(0.5) translateY(50px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes vne-toast-timer {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes vne-heartbeat {
+  0% { transform: scale(1); box-shadow: 0 8px 25px rgba(180, 38, 82, 0.4); }
+  50% { transform: scale(1.1); box-shadow: 0 12px 35px rgba(180, 38, 82, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 8px 25px rgba(180, 38, 82, 0.4); }
+}
+
+.vne-ab-pinned-icon:hover { transform: scale(1.1); }
+
+/* --- Level 2: Content Fade-out & Inline Modal --- */
+.vne-article-body p.fade-out {
+  position: relative;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  user-select: none;
+  pointer-events: none;
+}
+
+.vne-ab-inline-modal {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: var(--vne-radius);
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.vne-ab-inline-modal h3 {
+  color: var(--vne-brand);
+  margin-bottom: 12px;
+}
+
+.vne-ab-inline-modal .actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.vne-btn {
+  height: 44px !important;
+  padding: 0 24px !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  font-family: var(--vne-font-body) !important;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  min-width: 160px;
+}
+.vne-btn-primary { background: var(--vne-brand); color: white; }
+.vne-btn-primary:hover { background: var(--vne-brand-hover); }
+.vne-btn-secondary { background: #f4f4f4; color: #444; border: 1px solid #ddd; }
+.vne-btn-secondary:hover { background: #e9e9e9; }
+
+
+/* Sticky Bar */
+.vne-ab-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #1a1a1a;
+  color: white;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  z-index: 9998;
+  font-size: 13px;
+  animation: vne-slide-up-bar 0.3s ease;
+}
+
+/* --- Level 3: Hard Wall Guide --- */
+.vne-ab-hard-wall {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  z-index: 10001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vne-ab-guide-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+  max-width: 520px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.vne-ab-guide-card .gif-container {
+  width: 100%;
+  height: 200px;
+  background: #f4f4f4;
+  margin: 20px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.vne-ab-guide-card .gif-container img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+/* --- Carousel Styles for Level 3 --- */
+.vne-carousel { 
+  position: relative; 
+  width: 100%; 
+  height: 240px; 
+  border-radius: 12px; 
+  overflow: hidden; 
+  background: #F8F9FA; 
+  border: 1px solid #EEE; 
+  margin: 20px 0 30px 0;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+}
+.vne-carousel-inner { display: flex; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: 100%; height: 100%; }
+.vne-carousel-item { min-width: 100%; height: 100%; box-sizing: border-box; }
+.vne-carousel-item img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top; }
+.vne-carousel-controls { display: flex; justify-content: space-between; position: absolute; top: 50%; width: 100%; transform: translateY(-50%); pointer-events: none; }
+.vne-carousel-btn { background: rgba(0,0,0,0.5); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; pointer-events: auto; margin: 0 10px; display: flex; justify-content: center; align-items: center; transition: background 0.2s; }
+.vne-carousel-btn:hover { background: rgba(0,0,0,0.8); }
+.vne-carousel-dots { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 6px; }
+.vne-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(0,0,0,0.2); cursor: pointer; }
+.vne-dot.active { background: var(--vne-brand); }
+
+/* Animations */
+@keyframes vne-slide-up {
+  from { transform: translateY(100px) opacity: 0; }
+  to { transform: translateY(0) opacity: 1; }
+}
+
+@keyframes vne-slide-up-bar {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes vne-fade-to-icon {
+  to { transform: scale(0.1); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .vne-ab-toast {
+  position: fixed;
+  bottom: 80px; /* Above back to top area */
+  right: 20px;
+  width: 320px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgba(180, 38, 82, 0.15);
+  z-index: 200005;
+  border: 1px solid rgba(180, 38, 82, 0.1);
+  animation: vne-pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+}
+
+.vne-ab-toast span[style*="font-weight:bold"], 
+.vne-ab-inline-modal h3, 
+.vne-ab-guide-card h3 {
+  font-family: var(--vne-font-title) !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+}
+/* global-body-font */
+
+.vne-ab-toast, .vne-ab-toast p, .vne-ab-inline-modal, .vne-ab-inline-modal p, .vne-ab-guide-card, .vne-ab-guide-card p, .vne-ab-sticky-bar {
+  font-family: var(--vne-font-body) !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+
+.vne-step-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(180, 38, 82, 0.08);
+  color: var(--vne-brand);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
