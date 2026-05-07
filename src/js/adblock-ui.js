@@ -58,7 +58,7 @@ class AdBlockUI {
           Trình chặn quảng cáo có thể khiến một số tính năng hiển thị trên VnExpress hoạt động không ổn định. Hãy tắt để trải nghiệm nội dung mượt mà và ủng hộ tòa soạn.
         </p>
         <div class="actions">
-          <button class="vne-btn vne-btn-primary" onclick="adblockUI.showGuide()">Xem đầy đủ nội dung</button>
+          <button class="vne-btn vne-btn-primary" onclick="adblockUI.renderStep2()">Xem đầy đủ nội dung</button>
           <button class="vne-btn vne-btn-secondary" onclick="adblockUI.skipLevel2()">Để sau</button>
         </div>
       `;
@@ -91,7 +91,7 @@ class AdBlockUI {
     
     bar.innerHTML = `
       <span>Ủng hộ VnExpress bằng cách tắt trình chặn quảng cáo tại đây.</span>
-      <button class="vne-btn vne-btn-primary" onclick="adblockUI.showGuide()">Whitelist ngay</button>
+      <button class="vne-btn vne-btn-primary" onclick="adblockUI.renderStep2()">Cho phép hiển thị quảng cáo</button>
     `;
 
     document.body.appendChild(bar);
@@ -155,11 +155,17 @@ class AdBlockUI {
     document.body.style.overflow = 'hidden';
   }
 
+  
   renderStep2(blockerType = 'adguard') {
-    const wall = document.getElementById('vne-ab-hard-wall');
-    if (!wall) return;
+    let wall = document.getElementById('vne-ab-hard-wall');
+    if (!wall) {
+      wall = document.createElement('div');
+      wall.className = 'vne-ab-hard-wall';
+      wall.id = 'vne-ab-hard-wall';
+      document.body.appendChild(wall);
+    }
+    document.body.style.overflow = 'hidden';
 
-    
     const blockers = [
       { id: 'adguard', name: 'Adguard Extension', icon: '🛡️' },
       
