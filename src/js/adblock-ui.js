@@ -99,82 +99,185 @@ class AdBlockUI {
 
 
 
-  // --- Level 3: Hard Wall & Chrome Guide Optimization ---
+  
+  // --- Level 3: 2-Step Flow (Emotional -> Technical) ---
   showLevel3() {
-    console.log("[AdBlock] Triggering Level 3");
-    if (document.querySelector('.vne-ab-hard-wall')) return;
+    console.log("[AdBlock] Triggering Level 3 Step 1");
+    this.renderStep1();
+  }
 
-    const wall = document.createElement('div');
-    wall.className = 'vne-ab-hard-wall';
-    
-    
+
+  skipHardWall() {
+    console.log("[AdBlock] Skipping hard wall & unlocking content");
+    const wall = document.getElementById('vne-ab-hard-wall');
+    if (wall) {
+      wall.remove();
+      document.body.style.overflow = '';
+    }
+    const paragraphs = document.querySelectorAll('article.fck_detail p.Normal');
+    if (paragraphs.length >= 3) {
+      paragraphs[2].classList.remove('fade-out');
+      for (let i = 3; i < paragraphs.length; i++) {
+        paragraphs[i].style.display = 'block';
+      }
+    }
+    const inlineModal = document.querySelector('.vne-ab-inline-modal');
+    if (inlineModal) inlineModal.remove();
+    this.showStickyBar();
+  }
+
+  renderStep1() {
+    let wall = document.getElementById('vne-ab-hard-wall');
+    if (!wall) {
+      wall = document.createElement('div');
+      wall.className = 'vne-ab-hard-wall';
+      wall.id = 'vne-ab-hard-wall';
+      document.body.appendChild(wall);
+    }
     
     wall.innerHTML = `
-      <div class="vne-ab-guide-card">
-        <div style="font-size: 11px; color: #B42652; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px; opacity: 0.8;">SỰ ỦNG HỘ CỦA BẠN LÀ NGUỒN SỐNG CỦA TÒA SOẠN</div>
-        <div class="vne-step-badge">HƯỚNG DẪN NHANH</div>
-        <h3>Thông báo gỡ bỏ chặn quảng cáo</h3>
-        <p>
-          Để xem nội dung trên VnExpress, vui lòng làm theo 3 bước đơn giản bên dưới để thiết lập ngoại lệ.
+      <div class="vne-ab-guide-card emotional-mode">
+        <h3>Hãy giúp chúng tôi duy trì nội dung miễn phí bằng cách <br> cho phép quảng cáo</h3>
+        <p class="description">
+          VnExpress là cầu nối quê hương cho hơn 4 triệu người Việt toàn cầu. Dù bạn ở đâu, chúng tôi vẫn đưa tin đến bạn mỗi ngày. Xin bạn một bước nhỏ — tắt Adblock để giữ cầu nối này.
         </p>
         
-        <div class="vne-carousel" id="vneCarousel">
-          <div class="vne-carousel-inner" id="vneCarouselInner">
-            <div class="vne-carousel-item"><img src="step1.png" alt="Bước 1"></div>
-            <div class="vne-carousel-item"><img src="step2.png" alt="Bước 2"></div>
-            <div class="vne-carousel-item"><img src="step3.png" alt="Bước 3"></div>
-          </div>
-          <div class="vne-carousel-controls">
-            <button class="vne-carousel-btn" onclick="adblockUI.prevSlide()">&#10094;</button>
-            <button class="vne-carousel-btn" onclick="adblockUI.nextSlide()">&#10095;</button>
-          </div>
-          <div class="vne-carousel-dots" id="vneCarouselDots">
-            <div class="vne-dot active" onclick="adblockUI.goToSlide(0)"></div>
-            <div class="vne-dot" onclick="adblockUI.goToSlide(1)"></div>
-            <div class="vne-dot" onclick="adblockUI.goToSlide(2)"></div>
-          </div>
+        <div class="actions-vertical">
+          <button class="vne-btn vne-btn-primary" onclick="adblockUI.renderStep2()">
+             Cho phép hiển thị quảng cáo
+          </button>
+          <button class="vne-btn-ghost" onclick="adblockUI.skipHardWall()">
+             Tiếp tục mà không tắt quảng cáo
+          </button>
         </div>
-
-        <button class="vne-btn vne-btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="location.reload()">
-           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-           Tôi đã hiểu và làm theo
-        </button>
       </div>
     `;
-
-
-
-    document.body.appendChild(wall);
     document.body.style.overflow = 'hidden';
-    
-    // Init carousel state
-    this.currentSlide = 0;
   }
 
-  nextSlide() {
-    if (this.currentSlide < 2) {
-      this.goToSlide(this.currentSlide + 1);
-    }
+  renderStep2(blockerType = 'adguard') {
+    const wall = document.getElementById('vne-ab-hard-wall');
+    if (!wall) return;
+
+    
+    const blockers = [
+      { id: 'adguard', name: 'Adguard Extension', icon: '🛡️' },
+      
+      
+      { id: 'abp', name: 'Adblock Plus', icon: '🛑' },
+      { id: 'adblock', name: 'Adblock', icon: '✋' },
+      { id: 'brave', name: 'Brave', icon: '🦁' },
+      { id: 'duckduckgo', name: 'DuckDuckGo', icon: '🦆' },
+      { id: 'opera', name: 'Opera', icon: '🅾️' },
+      { id: 'edge', name: 'Microsoft Edge', icon: '🌐' },
+      { id: 'safari', name: 'Safari', icon: '🧭' },
+      { id: 'ghostery', name: 'Ghostery', icon: '👻' }
+    ];
+
+    const guides = {
+      adguard: {
+        title: 'Adguard Extension Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng AdGuard màu xanh lá trong thanh tiện ích mở rộng.',
+          'Nhấn vào công tắc lớn màu xanh lá để tắt.'
+        ]
+      },
+      
+      abp: {
+        title: 'Adblock Plus Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng Adblock Plus (ABP) trên thanh công cụ.',
+          'Nhấp vào công tắc bên cạnh "Trang web này" để tắt trình chặn.'
+        ]
+      },
+      adblock: {
+        title: 'Adblock Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng Adblock (bàn tay trắng trong vòng tròn đỏ).',
+          'Chọn "Luôn luôn" hoặc "Một lần" tại mục Tạm dừng trên trang web này.'
+        ]
+      },
+      brave: {
+        title: 'Brave Browser Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng Sư tử (Brave Shields) ở bên phải thanh địa chỉ.',
+          'Gạt công tắc chính sang trạng thái Tắt (Màu xám).'
+        ]
+      },
+      duckduckgo: {
+        title: 'DuckDuckGo Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng DuckDuckGo (hình con vịt) bên cạnh thanh địa chỉ.',
+          'Tắt mục "Bảo vệ quyền riêng tư" (Privacy Protection) cho trang web này.'
+        ]
+      },
+      opera: {
+        title: 'Opera Browser Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng hình Khiên xanh ở thanh địa chỉ.',
+          'Tắt tính năng "Chặn quảng cáo" (Ad blocking).'
+        ]
+      },
+      edge: {
+        title: 'Microsoft Edge Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng Ổ khóa hoặc thông tin trang web ở thanh địa chỉ.',
+          'Chọn "Quyền cho trang web này" và tắt các trình chặn nếu có, hoặc tắt Tracking Prevention.'
+        ]
+      },
+      safari: {
+        title: 'Safari Hướng dẫn',
+        steps: [
+          'Vào Menu Safari -> Cài đặt cho Trang web này.',
+          'Bỏ chọn mục "Sử dụng trình chặn nội dung" (Use Content Blockers).'
+        ]
+      },
+      ghostery: {
+        title: 'Ghostery Hướng dẫn',
+        steps: [
+          'Nhấn vào biểu tượng Ghostery (hình con ma) trên thanh công cụ.',
+          'Nhấn vào nút "Tin cậy trang web" (Trust Site).'
+        ]
+      }
+    };
+
+
+    const currentGuide = guides[blockerType] || guides['adguard'];
+
+    wall.innerHTML = `
+      <div class="vne-ab-tech-guide">
+        <div class="vne-tech-sidebar">
+          <h4>Chọn trình chặn của bạn:</h4>
+          ${blockers.map(b => `
+            <div class="vne-blocker-item ${b.id === blockerType ? 'active' : ''}" onclick="adblockUI.renderStep2('${b.id}')">
+              <span>${b.icon}</span> ${b.name}
+            </div>
+          `).join('')}
+        </div>
+        <div class="vne-tech-main">
+          <div class="vne-tech-header">
+            <div class="vne-back-btn" onclick="adblockUI.renderStep1()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              Quay lại
+            </div>
+            
+          </div>
+          <div class="vne-guide-content">
+            <h2>${currentGuide.title}</h2>
+            <ol class="vne-guide-steps">
+              ${currentGuide.steps.map((s, i) => `<li>${i + 1}. ${s}</li>`).join('')}
+            </ol>
+            
+          </div>
+          
+          <button class="vne-btn vne-btn-primary" style="margin-top: 30px; width: fit-content;" onclick="location.reload()">
+             Tôi đã tắt, làm mới trang
+          </button>
+        </div>
+      </div>
+    `;
   }
 
-  prevSlide() {
-    if (this.currentSlide > 0) {
-      this.goToSlide(this.currentSlide - 1);
-    }
-  }
-
-  goToSlide(index) {
-    this.currentSlide = index;
-    const inner = document.getElementById('vneCarouselInner');
-    const dots = document.querySelectorAll('#vneCarouselDots .vne-dot');
-    
-    inner.style.transform = `translateX(-${index * 100}%)`;
-    
-    dots.forEach((dot, i) => {
-      if (i === index) dot.classList.add('active');
-      else dot.classList.remove('active');
-    });
-  }
 
   showGuide() {
     // In a real app, this might show a specific modal or jump to L3-style guide
